@@ -3,10 +3,7 @@
 #include <windows.h>
 #include <stdlib.h>
 #include <time.h>
-/*for bg sound*/
 #include <mmsystem.h>
-
-/*to remove flicker*/
 void clear_screen_fast() {
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD pos = {0, 0};
@@ -18,25 +15,20 @@ int main() {
 	PlaySound(TEXT("bg.wav"), NULL, SND_ASYNC | SND_LOOP);
     srand(time(0));
 
-    int x = 1;              // player position (0 to 2)
-    int step = 0;           // obstacle vertical movement
-    int obstaclePos = rand() % 3;   // 0,1,2 lane
+    int x = 3;              
+    int step = 1;           
+    int obstaclePos = rand() % 3;   
 
     while (1) {
-
-        // ---- INPUT ----
         if (_kbhit()) {
             char ch = getch();
 
-            if (ch == 75 && x > 0)        // LEFT arrow
+            if (ch == 75 && x > 0)        
                 x--;
 
-            if (ch == 77 && x < 2)        // RIGHT arrow
+            if (ch == 77 && x < 2)        
                 x++;
         }
-
-        // ---- DRAW ----
-		// system("cls");
 		clear_screen_fast();
         printf("|--- --- ---|\n");
 
@@ -56,8 +48,6 @@ int main() {
                 printf("|           |\n");
             }
         }
-
-        // ---- PLAYER ----
         if (x == 0)
             printf("| %c         |\n", 6);
         else if (x == 1)
@@ -65,9 +55,8 @@ int main() {
         else if (x == 2)
             printf("|        %c  |\n", 6);
 
-        // ---- COLLISION ----
         if (step == 10 && x == obstaclePos) {
-        	PlaySound(NULL, NULL, 0);  // stop background
+        	PlaySound(NULL, NULL, 0);  
 			PlaySound(TEXT("impact.wav"), NULL, SND_ASYNC);
         	Sleep(2500);
             printf("\nGAME OVER!\n");
@@ -75,14 +64,10 @@ int main() {
         }
 
         Sleep(120);
-
-        // Move obstacle down
-        step++;
-
-        // Reset when reaches bottom
+        step++
         if (step > 10) {
             step = 0;
-            obstaclePos = rand() % 3; // new lane
+            obstaclePos = rand() % 3;
         }
     }
 
